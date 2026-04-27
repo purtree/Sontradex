@@ -1,0 +1,32 @@
+{
+  "rewrites": [
+    {
+      "source": "/",
+      "has": [
+        { "type": "host", "value": "sontradex.com" }
+      ],
+      "destination": "/en.html"
+    },
+    {
+      "source": "/",
+      "has": [
+        { "type": "host", "value": "www.sontradex.com" }
+      ],
+      "destination": "/en.html"
+    },
+    {
+      "source": "/",
+      "has": [
+        { "type": "host", "value": "sontradex.de" }
+      ],
+      "destination": "/de.html"
+    },
+    {
+      "source": "/",
+      "has": [
+        { "type": "host", "value": "www.sontradex.de" }
+      ],
+      "destination": "/de.html"
+    }
+  ]
+}
