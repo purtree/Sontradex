@@ -254,48 +254,55 @@
     // ─── GOOGLE SHEETS ───────────────────────────────────────────
     // Nahraď URL po deployi Google Apps Script (viz README.md)
     const GS_URL = 'https://script.google.com/macros/s/AKfycbwko_2b8R3ylff7YlDsTxbk3TT0zmzrD5FkISdw-7GIflppMk-y1_cn5-h92aZJM3as/exec';
-
-    // ─── PŘEKLADY ────────────────────────────────────────────────
+// ─── PŘEKLADY ────────────────────────────────────────────────
     const T = {
       cs: {
-        kicker:  'Holding · Est. MMCI · Praha',
-        h1:      'Dřevo. Příroda. Eko.',
-        tagline: 'Bez trendů. Bez zkratek. S respektem ke světu, který si jen půjčujeme.',
-        heritage:'Na sklonku roku 2001 bylo v Praze položeno to, co dnes přerůstá v něco většího — čtvrt století v souladu s přírodou.',
-        coming:  'Cirkulární ekonomika · Eco lifestyle · Více brzy',
+        kicker:  'Holding · Est. MMI · Praha',
+        h1:      'Tradice. Respekt. Rovnováha.',
+        tagline: 'Od roku 2001 dáváme věcem druhý smysl. Bez zkratek a s hlubokou úctou ke světu, který si jen půjčujeme.',
+        heritage:'Na sklonku roku 2001 vznikla v Praze rodinná vize, která dnes přesahuje čtvrt století. Nenápadně, ale vytrvale vracíme rovnováhu tam, kam patří.',
+        coming:  'Cirkulární ekonomika · Rodinný holding',
         ph:      'Váš e-mail',
-        cta:     'Odebírat',
+        cta:     'Zůstat v kontaktu',
         note:    'Žádný spam. Jen to podstatné.',
         ok:      'Děkujeme. Brzy se ohlásíme.',
         founded: 'Na sklonku roku 2001 založeno v Praze.',
       },
       de: {
-        kicker:  'Holding · Est. MMCI · Prag',
-        h1:      'Holz. Natur. Öko.',
-        tagline: 'Keine Trends. Keine Abkürzungen. Respekt vor einer Welt, die wir nur leihen.',
-        heritage:'Ende 2001 in Prag gegründet — was damals begann, wächst heute über sich hinaus. Ein Vierteljahrhundert im Einklang mit der Natur.',
-        coming:  'Kreislaufwirtschaft · Eco Lifestyle · Mehr kommt bald',
+        kicker:  'Holding · Est. MMI · Prag',
+        h1:      'Tradition. Respekt. Gleichgewicht.',
+        tagline: 'Seit 2001 geben wir Dingen einen zweiten Sinn. Ohne Abkürzungen und mit tiefem Respekt vor einer Welt, die wir nur leihen.',
+        heritage:'Ende 2001 entstand in Prag eine familiäre Vision, die heute über ein Vierteljahrhundert andauert. Unauffällig, aber beharrlich bringen wir das Gleichgewicht dorthin zurück, wo es hingehört.',
+        coming:  'Kreislaufwirtschaft · Familienholding',
         ph:      'Ihre E-Mail',
-        cta:     'Anmelden',
-        note:    'Kein Spam. Nur Wesentliches.',
-        ok:      'Danke. Wir melden uns.',
+        cta:     'In Kontakt bleiben',
+        note:    'Kein Spam. Nur das Wesentliche.',
+        ok:      'Danke. Wir melden uns in Kürze.',
         founded: 'Ende 2001 in Prag gegründet.',
       },
       en: {
-        kicker:  'Holding · Est. MMCI · Prague',
-        h1:      'Wood. Nature. Eco.',
-        tagline: 'No trends. No shortcuts. Deep respect for a world we only borrow.',
-        heritage:'Founded in Prague in late 2001 — what began then has grown into something more. A quarter century aligned with nature.',
-        coming:  'Circular Economy · Eco Lifestyle · More coming soon',
+        kicker:  'Holding · Est. MMI · Prague',
+        h1:      'Tradition. Respect. Balance.',
+        tagline: 'Giving things a second purpose since 2001. No shortcuts, just profound respect for a world we only borrow.',
+        heritage:'Founded in Prague in late 2001, our family vision now spans over a quarter of a century. Quietly but persistently, we restore balance where it belongs.',
+        coming:  'Circular Economy · Family Holding',
         ph:      'Your email',
-        cta:     'Stay tuned',
+        cta:     'Stay in touch',
         note:    'No spam. Just what matters.',
         ok:      "Thank you. We'll be in touch.",
         founded: 'Founded in Prague in late 2001.',
       },
     };
 
-    let lang = 'cs';
+    // ─── AUTODETEKCE JAZYKA PODLE DOMÉNY ─────────────────────────
+    let lang = 'cs'; // výchozí
+    const host = window.location.hostname || '';
+    
+    if (host.endsWith('.de')) {
+      lang = 'de';
+    } else if (host.endsWith('.com')) {
+      lang = 'en';
+    }
 
     function render(l) {
       const t = T[l] || T.cs; lang = l;
@@ -325,11 +332,10 @@
       const btn = document.getElementById('sub-btn');
       btn.disabled = true; btn.textContent = '…';
 
-      // no-cors: opaque response, data lands in Google Sheet
       fetch(GS_URL, {
         method: 'POST', mode: 'no-cors',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, lang, timestamp: new Date().toISOString(), source: 'sontradex.com' })
+        body: JSON.stringify({ email, lang, timestamp: new Date().toISOString(), source: host || 'sontradex' })
       }).catch(() => {});
 
       document.getElementById('sub-email').value = '';
@@ -337,7 +343,9 @@
       btn.textContent = T[lang].cta; btn.disabled = false;
     });
 
-    render('cs');
+    // Spuštění s detekovaným jazykem
+    render(lang);
+ 
   </script>
 </body>
 </html>
